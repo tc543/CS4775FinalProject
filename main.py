@@ -1,6 +1,7 @@
-import algorithms
+import testing
+
 def main():
-    algorithms.testingAround()
+    testing.test1()
 
 if __name__ == "__main__":
     main()
