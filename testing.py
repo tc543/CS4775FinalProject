@@ -1,6 +1,8 @@
 import algorithms
 import numpy as np
 import time
+import tracemalloc
+from memory_profiler import profile
 
 '''Reads the fasta file and outputs the sequence to analyze.
 Arguments:
@@ -14,6 +16,7 @@ def read_fasta(filename):
         s += f.readlines()[0].strip()
     return s
 
+@profile
 def test1():
     mu = 0.05
     transition_probabilities = {
@@ -27,10 +30,13 @@ def test1():
     initial_probabilities = {'h': np.log(0.5), 'l': np.log(0.5)}
     s = read_fasta(
         "C:\\Users\\wzhyt\\Downloads\\dont_delete\\CS4775FinalProject\\CS4775FinalProject\\Data\\SampleDNAData")
+    # tracemalloc.start()
     start_time = time.time_ns()
     a, b = algorithms.viterbi(s, transition_probabilities, emission_probabilities, initial_probabilities)
     end_time = time.time_ns()
     time_elapsed = (end_time - start_time) / 1000000
+    # print(tracemalloc.get_traced_memory())
+    # tracemalloc.stop()
     # print(a)
     # print(b)
     print("Time it takes to run test1", time_elapsed, "seconds")
