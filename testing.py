@@ -1,9 +1,10 @@
 import numpy as np
 import time
+import math
 import bellman
 import dijkstra
 import viterbi
-
+import tracemalloc
 
 
 # Read the file
@@ -40,6 +41,9 @@ files.append(read_fasta("C:\\Users\\wzhyt\\Downloads\\dont_delete\\CS4775FinalPr
 viterbiTime = []
 bellmanTime = []
 dijkstraTime = []
+viterbiMem = []
+bellmanMem = []
+dijkstraMem = []
 
 
 # Running all DNA seq on viterbi
@@ -48,8 +52,12 @@ def generateViterbiTime():
         start_time = time.time_ns()
         a, b = viterbi.viterbi(file, transition_probabilities, emission_probabilities, initial_probabilities)
         end_time = time.time_ns()
-        time_elapsed = (end_time - start_time) / 1000000
-        viterbiTime.append(time_elapsed)
+        time_elapsed = (end_time - start_time) / (1000 * 1000)
+        viterbiTime.append(math.log10(time_elapsed))
+        tracemalloc.start()
+        a, b = viterbi.viterbi(file, transition_probabilities, emission_probabilities, initial_probabilities)
+        viterbiMem.append(tracemalloc.get_traced_memory()[1] / (1024 * 1024))
+        tracemalloc.stop()
 
 
 # Running all DNA seq on bellman ford
@@ -59,7 +67,11 @@ def generateBellmanTime():
         a, b = bellman.bellman_ford(file, transition_probabilities, emission_probabilities, initial_probabilities)
         end_time = time.time_ns()
         time_elapsed = (end_time - start_time) / 1000000
-        bellmanTime.append(time_elapsed)
+        bellmanTime.append(math.log10(time_elapsed))
+        tracemalloc.start()
+        a, b = bellman.bellman_ford(file, transition_probabilities, emission_probabilities, initial_probabilities)
+        bellmanMem.append(tracemalloc.get_traced_memory()[1] / (1024 * 1024))
+        tracemalloc.stop()
 
 
 # Running all DNA seq on dijkstra
@@ -69,7 +81,13 @@ def generateDijkstraTime():
         a, b = dijkstra.dijkstra(file, transition_probabilities, emission_probabilities, initial_probabilities)
         end_time = time.time_ns()
         time_elapsed = (end_time - start_time) / 1000000
-        dijkstraTime.append(time_elapsed)
+        dijkstraTime.append(math.log10(time_elapsed))
+        tracemalloc.start()
+        a, b = dijkstra.dijkstra(file, transition_probabilities, emission_probabilities, initial_probabilities)
+        dijkstraMem.append(tracemalloc.get_traced_memory()[1] / (1024 * 1024))
+        tracemalloc.stop()
+
+
 
 
 # Running all the algorithms

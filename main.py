@@ -1,5 +1,11 @@
 import testing
 import pandas as pd
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+
 def main():
     testing.testRunTime()
     d = {
@@ -8,7 +14,45 @@ def main():
         'Dijkstra': testing.dijkstraTime
     }
     df = pd.DataFrame(data=d)
+    d1 = {
+        'Viterbi': testing.viterbiMem,
+        'Bellman': testing.bellmanMem,
+        'Dijkstra': testing.dijkstraMem
+    }
+    df1 = pd.DataFrame(data=d1)
+
+
+    xaxis = [i for i in range(len(testing.viterbiTime))]
+    barWidth = 0.25
+    br1 = np.arange(len(testing.viterbiTime))
+    br2 = [x + barWidth for x in br1]
+    br3 = [x + barWidth for x in br2]
+    plt.bar(br1, testing.viterbiTime, color ='r', width = barWidth,
+            edgecolor ='grey', label ='Viterbi')
+    plt.bar(br2, testing.bellmanTime, color ='g', width = barWidth,
+            edgecolor ='grey', label ='Bellman Ford')
+    plt.bar(br3, testing.dijkstraTime, color ='b', width = barWidth,
+            edgecolor ='grey', label ='Dijkstra')
+    plt.xticks(xaxis)
+    plt.xlabel('DNA sequence', fontweight ='bold', fontsize = 15)
+    plt.ylabel('Time it takes to run in log10 scale (ms)', fontweight='bold', fontsize=15)
+    plt.legend()
+    plt.savefig('Run_Time.png')
+
+    plt.bar(br1, testing.viterbiMem, color='r', width=barWidth,
+            edgecolor='grey', label='Viterbi')
+    plt.bar(br2, testing.bellmanMem, color='g', width=barWidth,
+            edgecolor='grey', label='Bellman Ford')
+    plt.bar(br3, testing.dijkstraMem, color='b', width=barWidth,
+            edgecolor='grey', label='Dijkstra')
+    plt.xticks(xaxis)
+    plt.xlabel('DNA sequence', fontweight='bold', fontsize=15)
+    plt.ylabel('Peak Memory Usage (MB)', fontweight='bold', fontsize=15)
+    plt.savefig('Memory_Usage.png')
+
     print(df)
+    print(df1)
+
 
 if __name__ == "__main__":
     main()
