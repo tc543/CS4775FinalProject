@@ -1,3 +1,5 @@
+import math
+
 import testing
 import pandas as pd
 
@@ -14,6 +16,12 @@ def main():
         'Dijkstra': testing.dijkstraTime
     }
     df = pd.DataFrame(data=d)
+    d2 = {
+        'Viterbi': [10 ** x for x in testing.viterbiTime],
+        'Bellman': [10 ** x for x in testing.bellmanTime],
+        'Dijkstra': [10 ** x for x in testing.dijkstraTime]
+    }
+    df2 = pd.DataFrame(data=d2)
     d1 = {
         'Viterbi': testing.viterbiMem,
         'Bellman': testing.bellmanMem,
@@ -39,6 +47,7 @@ def main():
     plt.legend()
     plt.savefig('Run_Time.png')
 
+    plt.clf()
     plt.bar(br1, testing.viterbiMem, color='r', width=barWidth,
             edgecolor='grey', label='Viterbi')
     plt.bar(br2, testing.bellmanMem, color='g', width=barWidth,
@@ -52,6 +61,7 @@ def main():
 
     print(df)
     print(df1)
+    print(df2)
 
 
 if __name__ == "__main__":
