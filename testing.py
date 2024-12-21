@@ -2,6 +2,7 @@ import numpy as np
 import time
 import math
 import bellman
+import bidijkstra
 import dijkstra
 import viterbi
 import tracemalloc
@@ -13,6 +14,31 @@ def read_fasta(filename):
         s = ""
         s += f.readlines()[1].strip()
     return s
+
+
+# Read the multilines file
+def read_fasta_multilines(filename):
+    with open(filename, "r") as f:
+        s = ""
+        skip = True
+        for line in f.readlines():
+            if skip:
+                skip = False
+                continue
+            s += line.strip()
+        realS = ""
+        for c in s:
+            if c == 'c':
+                realS += "C"
+            elif c == "a":
+                realS += "A"
+            elif c == "t":
+                realS += "T"
+            elif c == "g":
+                realS += "G"
+            else:
+                realS += c
+    return realS
 
 
 # List of all probabilities
@@ -41,9 +67,19 @@ files.append(read_fasta("C:\\Users\\wzhyt\\Downloads\\dont_delete\\CS4775FinalPr
 viterbiTime = []
 bellmanTime = []
 dijkstraTime = []
+bidijkstraTime = []
 viterbiMem = []
 bellmanMem = []
 dijkstraMem = []
+bidijkstraMem = []
+realVTime = []
+realBTime = []
+realDTime = []
+realBiDTime = []
+realVMem = []
+realBMem = []
+realDMem = []
+realBiDMem = []
 
 
 # Running all DNA seq on viterbi
@@ -88,10 +124,63 @@ def generateDijkstraTime():
         tracemalloc.stop()
 
 
+# Running all DNA seq on bidijkstra
+def generateBidijkstraTime():
+    for file in files:
+        start_time = time.time_ns()
+        bidijkstra.BiDirectionalDijkstra()
+        a, b = bidijkstra.BiDirectionalDijkstra.dijkstra(file, transition_probabilities, emission_probabilities, initial_probabilities)
+        end_time = time.time_ns()
+        time_elapsed = (end_time - start_time) / 1000000
+        dijkstraTime.append(math.log10(time_elapsed))
+        tracemalloc.start()
+        a, b = dijkstra.dijkstra(file, transition_probabilities, emission_probabilities, initial_probabilities)
+        dijkstraMem.append(tracemalloc.get_traced_memory()[1] / (1024 * 1024))
+        tracemalloc.stop()
+
+
+# Running the two real DNA seq on all algorithms
+def generateRealSeqTime():
+    realFile = []
+    realFile.append(read_fasta_multilines("C:\\Users\\wzhyt\\Downloads\\dont_delete\\CS4775FinalProject\\CS4775FinalProject\\chimpanzee.txt"))
+    realFile.append(read_fasta_multilines("C:\\Users\\wzhyt\\Downloads\\dont_delete\\CS4775FinalProject\\CS4775FinalProject\\human_chrome.txt"))
+    for file in realFile:
+        start_time = time.time_ns()
+        a, b = viterbi.viterbi(file, transition_probabilities, emission_probabilities, initial_probabilities)
+        end_time = time.time_ns()
+        time_elapsed = (end_time - start_time) / 1000000
+        realVTime.append(math.log10(time_elapsed))
+        tracemalloc.start()
+        a, b = viterbi.viterbi(file, transition_probabilities, emission_probabilities, initial_probabilities)
+        realVMem.append(tracemalloc.get_traced_memory()[1] / (1024 * 1024))
+        tracemalloc.stop()
+        print(time_elapsed)
+        # start_time = time.time_ns()
+        # a, b = bellman.bellman_ford(file, transition_probabilities, emission_probabilities, initial_probabilities)
+        # end_time = time.time_ns()
+        # time_elapsed = (end_time - start_time) / 1000000
+        # realBTime.append(math.log10(time_elapsed))
+        # tracemalloc.start()
+        # a, b = bellman.bellman_ford(file, transition_probabilities, emission_probabilities, initial_probabilities)
+        # realBMem.append(tracemalloc.get_traced_memory()[1] / (1024 * 1024))
+        # tracemalloc.stop()
+        # # print(time_elapsed)
+        start_time = time.time_ns()
+        a, b = dijkstra.dijkstra(file, transition_probabilities, emission_probabilities, initial_probabilities)
+        end_time = time.time_ns()
+        time_elapsed = (end_time - start_time) / 1000000
+        realDTime.append(math.log10(time_elapsed))
+        tracemalloc.start()
+        a, b = dijkstra.dijkstra(file, transition_probabilities, emission_probabilities, initial_probabilities)
+        realDMem.append(tracemalloc.get_traced_memory()[1] / (1024 * 1024))
+        tracemalloc.stop()
+        print(time_elapsed)
 
 
 # Running all the algorithms
 def testRunTime():
-    generateViterbiTime()
-    generateBellmanTime()
-    generateDijkstraTime()
+    # generateViterbiTime()
+    # generateBellmanTime()
+    # generateDijkstraTime()
+    generateBidijkstraTime()
+    # generateRealSeqTime()
