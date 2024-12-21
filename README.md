@@ -1,5 +1,5 @@
 # WIP
-# main.py - Calling functions from other files
+main.py - Calling functions from other files
 # algorithm.py - all the algorithm functions
 # testing.py - all test cases created there
 # 
