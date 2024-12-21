@@ -2,7 +2,7 @@ import numpy as np
 import time
 import math
 import bellman
-import bidijkstra
+import bidirecdijkstra
 import dijkstra
 import viterbi
 import tracemalloc
@@ -128,14 +128,13 @@ def generateDijkstraTime():
 def generateBidijkstraTime():
     for file in files:
         start_time = time.time_ns()
-        bidijkstra.BiDirectionalDijkstra()
-        a, b = bidijkstra.BiDirectionalDijkstra.dijkstra(file, transition_probabilities, emission_probabilities, initial_probabilities)
+        a, b = bidirecdijkstra.bidirectional_dijkstra(file, transition_probabilities, emission_probabilities, initial_probabilities)
         end_time = time.time_ns()
         time_elapsed = (end_time - start_time) / 1000000
-        dijkstraTime.append(math.log10(time_elapsed))
+        bidijkstraTime.append(math.log10(time_elapsed))
         tracemalloc.start()
-        a, b = dijkstra.dijkstra(file, transition_probabilities, emission_probabilities, initial_probabilities)
-        dijkstraMem.append(tracemalloc.get_traced_memory()[1] / (1024 * 1024))
+        a, b = bidirecdijkstra.bidirectional_dijkstra(file, transition_probabilities, emission_probabilities, initial_probabilities)
+        bidijkstraMem.append(tracemalloc.get_traced_memory()[1] / (1024 * 1024))
         tracemalloc.stop()
 
 
@@ -175,12 +174,22 @@ def generateRealSeqTime():
         realDMem.append(tracemalloc.get_traced_memory()[1] / (1024 * 1024))
         tracemalloc.stop()
         print(time_elapsed)
+        start_time = time.time_ns()
+        a, b = bidirecdijkstra.bidirectional_dijkstra(file, transition_probabilities, emission_probabilities, initial_probabilities)
+        end_time = time.time_ns()
+        time_elapsed = (end_time - start_time) / 1000000
+        realBiDTime.append(math.log10(time_elapsed))
+        tracemalloc.start()
+        a, b = bidirecdijkstra.bidirectional_dijkstra(file, transition_probabilities, emission_probabilities, initial_probabilities)
+        realBiDMem.append(tracemalloc.get_traced_memory()[1] / (1024 * 1024))
+        tracemalloc.stop()
+        print(time_elapsed)
 
 
 # Running all the algorithms
 def testRunTime():
-    # generateViterbiTime()
-    # generateBellmanTime()
-    # generateDijkstraTime()
+    generateViterbiTime()
+    generateBellmanTime()
+    generateDijkstraTime()
     generateBidijkstraTime()
-    # generateRealSeqTime()
+    generateRealSeqTime()
