@@ -9,4 +9,4 @@
     - tracemalloc
 - Go to line 33-37 in testing.py file and change the file path to your computer file path for the 5 sample data in the Data folder
 - Run the main.py file to see the result
-- There should be two new images generated in this project folder
+- There should be four new images generated in this project folder
