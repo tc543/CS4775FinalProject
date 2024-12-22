@@ -1,5 +1,3 @@
-import math
-
 import testing
 import pandas as pd
 
@@ -9,7 +7,10 @@ import matplotlib.pyplot as plt
 
 
 def main():
+    # Generate all the data
     testing.testRunTime()
+
+    # Printing the numerical values
     d = {
         'Viterbi': testing.viterbiTime,
         'Bellman': testing.bellmanTime,
@@ -33,6 +34,9 @@ def main():
     df1 = pd.DataFrame(data=d1)
 
 
+    # Creating the bar charts
+
+    # Synthetic DNA Sequence RunTime
     xaxis = [i for i in range(len(testing.viterbiTime))]
     barWidth = 0.2
     br1 = np.arange(len(testing.viterbiTime))
@@ -53,6 +57,7 @@ def main():
     plt.legend()
     plt.savefig('Run_Time.png')
 
+    # Synthetic DNA Sequence Peak Memory Usage
     plt.clf()
     plt.bar(br1, testing.viterbiMem, color='r', width=barWidth,
             edgecolor='grey', label='Viterbi')
@@ -68,8 +73,9 @@ def main():
     plt.legend()
     plt.savefig('Memory_Usage.png')
 
+    # Real DNA Sequence RunTime
     xaxis = [i for i in range(len(testing.realVTime))]
-    barWidth = 0.25
+    barWidth = 0.2
     br1 = np.arange(len(testing.realVTime))
     br2 = [x + barWidth for x in br1]
     br3 = [x + barWidth for x in br2]
@@ -87,6 +93,7 @@ def main():
     plt.legend()
     plt.savefig('Real_Run_Time.png')
 
+    # Real DNA Sequence Peak Memory Usage
     plt.clf()
     plt.bar(br1, testing.realVMem, color='r', width=barWidth,
             edgecolor='grey', label='Viterbi')
@@ -100,6 +107,7 @@ def main():
     plt.legend()
     plt.savefig('Real_Memory_Usage.png')
 
+    # Printing out the numerical values
     print(df)
     print(df1)
     print(df2)

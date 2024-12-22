@@ -124,7 +124,7 @@ def generateDijkstraTime():
         tracemalloc.stop()
 
 
-# Running all DNA seq on bidijkstra
+# Running all DNA seq on bi-directional dijkstra
 def generateBidijkstraTime():
     for file in files:
         start_time = time.time_ns()
@@ -144,16 +144,21 @@ def generateRealSeqTime():
     realFile.append(read_fasta_multilines("C:\\Users\\wzhyt\\Downloads\\dont_delete\\CS4775FinalProject\\CS4775FinalProject\\chimpanzee.txt"))
     realFile.append(read_fasta_multilines("C:\\Users\\wzhyt\\Downloads\\dont_delete\\CS4775FinalProject\\CS4775FinalProject\\human_chrome.txt"))
     for file in realFile:
+
+        # Viterbi
         start_time = time.time_ns()
         a, b = viterbi.viterbi(file, transition_probabilities, emission_probabilities, initial_probabilities)
         end_time = time.time_ns()
         time_elapsed = (end_time - start_time) / 1000000
-        realVTime.append(math.log10(time_elapsed))
+        realVTime.append(time_elapsed)
         tracemalloc.start()
         a, b = viterbi.viterbi(file, transition_probabilities, emission_probabilities, initial_probabilities)
         realVMem.append(tracemalloc.get_traced_memory()[1] / (1024 * 1024))
         tracemalloc.stop()
         print(time_elapsed)
+
+        #Bellman Ford ( > 15 minutes to run)
+
         # start_time = time.time_ns()
         # a, b = bellman.bellman_ford(file, transition_probabilities, emission_probabilities, initial_probabilities)
         # end_time = time.time_ns()
@@ -164,21 +169,25 @@ def generateRealSeqTime():
         # realBMem.append(tracemalloc.get_traced_memory()[1] / (1024 * 1024))
         # tracemalloc.stop()
         # # print(time_elapsed)
+
+        # Dijkstra
         start_time = time.time_ns()
         a, b = dijkstra.dijkstra(file, transition_probabilities, emission_probabilities, initial_probabilities)
         end_time = time.time_ns()
         time_elapsed = (end_time - start_time) / 1000000
-        realDTime.append(math.log10(time_elapsed))
+        realDTime.append(time_elapsed)
         tracemalloc.start()
         a, b = dijkstra.dijkstra(file, transition_probabilities, emission_probabilities, initial_probabilities)
         realDMem.append(tracemalloc.get_traced_memory()[1] / (1024 * 1024))
         tracemalloc.stop()
         print(time_elapsed)
+
+        # Bi-directional Dijkstra
         start_time = time.time_ns()
         a, b = bidirecdijkstra.bidirectional_dijkstra(file, transition_probabilities, emission_probabilities, initial_probabilities)
         end_time = time.time_ns()
         time_elapsed = (end_time - start_time) / 1000000
-        realBiDTime.append(math.log10(time_elapsed))
+        realBiDTime.append(time_elapsed)
         tracemalloc.start()
         a, b = bidirecdijkstra.bidirectional_dijkstra(file, transition_probabilities, emission_probabilities, initial_probabilities)
         realBiDMem.append(tracemalloc.get_traced_memory()[1] / (1024 * 1024))
